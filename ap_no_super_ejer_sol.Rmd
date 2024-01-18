@@ -1,0 +1,112 @@
+---
+title: 'Aprendizaje NO supervisado'
+author: "José Reyes-Valdés"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    css: styles2.css
+    toc: yes
+    toc_float: true
+    collapsed: true
+    toc_depth: 3
+    number_sections: yes
+params:
+  par01: 'Universidad Auónoma de Coahuila'
+  par02: 'Centro de Investigación en Matemáticas Aplicadas'
+  par03: "00000000"
+  par04: "JOSE"
+  par05: "REYES VALDES"
+  par06: "jose.reyes.valdes@uadec.edu.mx"
+bibliography: biblio_test.bib
+csl: apa-7th-edition.csl
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  fig.align = 'center',
+  out.width = '95%')
+```
+
+```{r libs, echo = FALSE, include = FALSE}
+library(readr)
+library(RMySQL)
+library(tidyr)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+library(qrcode)
+library(openxlsx)
+library(stringr)
+library(foreign)
+
+library(tree)
+library(caret)
+library(e1071)
+library(ISLR)
+```
+
+```{r warning=FALSE, out.width="30%", warning=FALSE}
+# qrcode_gen(
+#   paste0(
+#     params$par01, "\n",
+#     params$par02, "\n",
+#     params$par03, "\n",
+#     params$par04, " ",
+#     params$par05, "\n",
+#     params$par06
+#   )
+# )
+qr <- qr_code(
+  paste0(
+    params$par01, "\n",
+    params$par02, "\n",
+    params$par03, "\n",
+    params$par04, " ",
+    params$par05, "\n",
+    params$par06
+  )
+)
+plot(qr)
+```
+```{r funciones, echo = FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{pmatrix}"
+  end <- "\\end{pmatrix}"
+  X <- apply(x, 1, function(x) {paste(paste(x,collapse = "&"),"\\\\")})
+  paste(c(begin, X, end), collapse = "")
+  }
+```
+
+#K-means
+
+BAsado en el ejemplo de asaltos con arma punzo-cortante o de fuego.
+
+```{r}
+
+col.type <- list(
+  col_number(),
+  col_number(),
+  col_factor()
+)
+
+df <- read.csv("../cima_cd_data/asaltos2.csv", col_types = col.type)
+
+g.0 <- ggplot(
+  
+  date = df
+) +
+  aes(
+    x=X,
+    y=Y
+  ) +
+  geom_point(
+    col = "olivedrab4"
+  ) +
+  theme_bw() +
+  coord_fixed()
+
+print(g.0)
+```
+
